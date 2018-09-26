@@ -12,6 +12,6 @@ Remove duplicates from a list of contacts
 ```
 then put that command in the background (control-z and bg), then run to upload a file
 ```
-curl -F file=@//Users/mcobery/dev/java/projects/dedupe/src/main/resources/csv/normal.csv  http://localhost:8181/api/v1/contacts -X POST -v
+curl -F file=@./src/main/resources/csv/normal.csv  http://localhost:8181/api/v1/contacts -X POST -v
 ```
 
