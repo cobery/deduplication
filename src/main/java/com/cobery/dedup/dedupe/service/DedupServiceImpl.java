@@ -26,6 +26,12 @@ import java.util.stream.Stream;
 @Named
 public class DedupServiceImpl implements DedupService {
 
+    private final Comparator<Contact> contactComparator;
+
+    public DedupServiceImpl(Comparator<Contact> comparator) {
+        this.contactComparator = comparator;
+    }
+
     @Override
     public Result dedupe(byte[] contactUpload) {
         Result result = readContacts(contactUpload);
@@ -40,19 +46,7 @@ public class DedupServiceImpl implements DedupService {
         // turn each row into a contact
         Result result = new Result();
 
-        Comparator<Contact> comparator = new Comparator<Contact>() {
-            public int compare(Contact contact1, Contact contact2) {
-                int retVal = 1;
-                if (contact1.equals(contact2)
-                        || contact1.getFullNamePhoneMeta().equals(contact2.getFullNamePhoneMeta())
-                        || contact1.getFullNameEmailMeta().equals(contact2.getFullNameEmailMeta())) {
-                    retVal = 0;
-                }
-                return retVal;
-            }
-        };
-
-        Multimap<Contact, Contact> groups = TreeMultimap.create(comparator, Ordering.arbitrary());
+        Multimap<Contact, Contact> groups = TreeMultimap.create(contactComparator, Ordering.arbitrary());
 
         try (Stream<String> stream = Files.lines(Paths.get(contactFile.toURI())).skip(1)) {
 
@@ -66,6 +60,7 @@ public class DedupServiceImpl implements DedupService {
         }
 
         Map<Contact, Collection<Contact>> groupMap = groups.asMap();
+
         for(Collection<Contact> group : groupMap.values()) {
             if (group.size() == 1) {
                 result.getContacts().addAll(group);
