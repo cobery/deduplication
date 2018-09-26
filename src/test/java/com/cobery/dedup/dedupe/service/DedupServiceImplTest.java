@@ -20,19 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 public class DedupServiceImplTest {
 
-    private static final int CONTACT_ID = 1;
-    private static final String CONTACT_FIRST_NAME = "Donalt";
-    private static final String CONTACT_LAST_NAME = "Canter";
-    private static final String CONTACT_COMPANY = "Gottlieb Group";
-    private static final String CONTACT_EMAIL = "dcanter0@nydailynews.com";
-    private static final String CONTACT_ADDRESS1 = "9 Homewood Alley";
-    private static final String CONTACT_ADDRESS2 = "";
-    private static final String CONTACT_ZIP = "50335";
-    private static final String CONTACT_CITY = "Des Moines";
-    private static final String CONTACT_STATE_FULL = "Iowa";
-    private static final String CONTACT_STATE_ABBREVIATION = "IA";
-    private static final String CONTACT_PHONE = "515-601-4495";
-
     private static final String[] CONTACTS = {
         "15,Jacquelyn,Ilchenko,Goodwin Inc,jilchenkoe@wisc.edu,9160 Cherokee Avenue,,18763,Wilkes Barre,Pennsylvania,PA,570-384-8352",
         "15,Jacqueline,Ilchenko,Goodwin Inc,jilchenkoe@wisc.edu,9160 Cherokee Avenue,,18763,Wilkes Barre,Pennsylvania,PA,570-384-8352",
