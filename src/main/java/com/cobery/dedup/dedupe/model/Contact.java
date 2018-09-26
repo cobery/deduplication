@@ -1,5 +1,6 @@
 package com.cobery.dedup.dedupe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ComparisonChain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,24 +46,31 @@ public class Contact implements Comparable<Contact>{
     @EqualsAndHashCode.Exclude
     private final int id;
 
-    @EqualsAndHashCode.Exclude
     private final String firstName;
 
+    @JsonIgnore
     private final String firstNameMeta;
 
-    @EqualsAndHashCode.Exclude
     private final String lastName;
 
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String lastNameMeta;
 
     @EqualsAndHashCode.Exclude
     private final String company;
 
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String companyMeta;
 
-    @EqualsAndHashCode.Exclude
     private final String email;
 
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String emailMeta;
 
     private final String address1;
@@ -80,10 +88,14 @@ public class Contact implements Comparable<Contact>{
 
     private final String phone;
 
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String fullNamePhoneMeta;
 
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String fullNameEmailMeta;
 
 

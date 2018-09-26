@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
- * Default implementation of the DedupService.
+ * Default implementation of the @see DedupService.
  */
 @Slf4j
 @Named

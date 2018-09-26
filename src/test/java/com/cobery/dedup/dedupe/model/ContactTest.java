@@ -10,9 +10,9 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Unit test for Contact.
@@ -128,10 +128,10 @@ public class ContactTest {
     }
 
     @Test
-    public void willMatchContactsWithDifferentSpellingFirstName() {
+    public void wontMatchContactsWithDifferentSpellingFirstName() {
         Contact jackie1 = new Contact(rows[0]);
         Contact jackie2 = new Contact(rows[1]);
-        assertEquals("Match contacts", jackie1, jackie2);
+        assertNotEquals("Match contacts", jackie1, jackie2);
     }
 
     @Test

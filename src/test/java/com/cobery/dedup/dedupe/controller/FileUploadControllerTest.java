@@ -1,6 +1,5 @@
 package com.cobery.dedup.dedupe.controller;
 
-import com.cobery.dedup.dedupe.model.Contact;
 import com.cobery.dedup.dedupe.model.Result;
 import com.cobery.dedup.dedupe.service.DedupService;
 import org.junit.Before;
@@ -11,9 +10,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.io.IOException;
-import java.util.List;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -35,12 +31,13 @@ public class FileUploadControllerTest {
     @Mock
     private DedupService mockDedupeService;
 
-    @Mock
-    private Result mockResult;
+    private Result result;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        result = new Result();
 
         fileUploadController = new FileUploadController(mockDedupeService);
 
@@ -53,7 +50,7 @@ public class FileUploadControllerTest {
     public void willUploadContacts() throws Exception {
 
         // dedupeService.dedupe(contactsFile.getBytes())
-        when(mockDedupeService.dedupe(any())).thenReturn(mockResult);
+        when(mockDedupeService.dedupe(any())).thenReturn(result);
 
         MockMultipartFile contactsFile = new MockMultipartFile("file", "", "application/text", CONTACTS.getBytes());
 

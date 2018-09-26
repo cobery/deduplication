@@ -1,5 +1,7 @@
 package com.cobery.dedup.dedupe.controller;
 
+import com.cobery.dedup.dedupe.model.Contact;
+import com.cobery.dedup.dedupe.model.Result;
 import com.cobery.dedup.dedupe.service.DedupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,14 +28,30 @@ public class FileUploadController {
     }
 
     @RequestMapping(value = "/contacts", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadContacts(@RequestParam("file") MultipartFile contactsFile) {
+    public ResponseEntity<Result> uploadContacts(@RequestParam("file") MultipartFile contactsFile) {
         HttpStatus returnStatus = HttpStatus.OK;
+        Result result = new Result();
         try {
-            dedupeService.dedupe(contactsFile.getBytes());
+            result = dedupeService.dedupe(contactsFile.getBytes());
         } catch (IOException e) {
             returnStatus = HttpStatus.BAD_REQUEST;
             log.error("Error getting bytes from the file upload.", e);
         }
-        return new ResponseEntity<>(returnStatus);
+
+        log.info("******************************************");
+        log.info("Potential Duplicates ( Count {} )", result.getDuplicates().size());
+        for(Contact contact: result.getDuplicates()) {
+            log.info(contact.toString());
+        }
+        log.info("******************************************");
+        log.info("No Duplicates ( Count {} )", result.getContacts().size());
+        for(Contact contact: result.getContacts()) {
+            log.info(contact.toString());
+        }
+        log.info("******************************************");
+
+        return ResponseEntity
+                .status(returnStatus)
+                .body(result);
     }
 }
