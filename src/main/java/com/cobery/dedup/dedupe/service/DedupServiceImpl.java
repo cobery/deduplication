@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -40,27 +41,20 @@ public class DedupServiceImpl implements DedupService {
     }
 
     private Result readContacts(byte[] contactUpload) {
-        // create a temp file
-        File contactFile = createTempFile(contactUpload);
-
         // turn each row into a contact
         Result result = new Result();
 
         Multimap<Contact, Contact> groups = TreeMultimap.create(contactComparator, Ordering.arbitrary());
 
-        try (Stream<String> stream = Files.lines(Paths.get(contactFile.toURI())).skip(1)) {
+        String contactString = new String(contactUpload);
 
-            stream.map(Contact::new).forEachOrdered(contact -> {
-                groups.put(contact, contact);
-            });
+        Stream<String> contactStream = Pattern.compile("\\r?\\n").splitAsStream(contactString).skip(1);
 
-        } catch (IOException e) {
-            log.error("Error writing to temp file", e);
-            throw new RuntimeException(e);
-        }
+        contactStream.map(Contact::new).forEachOrdered(contact -> {
+            groups.put(contact, contact);
+        });
 
         Map<Contact, Collection<Contact>> groupMap = groups.asMap();
-
         for(Collection<Contact> group : groupMap.values()) {
             if (group.size() == 1) {
                 result.getContacts().addAll(group);
@@ -70,26 +64,6 @@ public class DedupServiceImpl implements DedupService {
         }
 
         return result;
-    }
-
-    private File createTempFile(byte[] bytes) {
-        String fileName = UUID.randomUUID().toString();
-
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile(fileName, ".tmp");
-        } catch (IOException e) {
-            log.error("Error creating temp file", e);
-        }
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fos.write(bytes);
-            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try.
-            // And this will automatically close the OutputStream
-        }catch (IOException e) {
-            log.error("Error writing to temp file", e);
-        }
-        tempFile.deleteOnExit();
-        return tempFile;
     }
 
 }
